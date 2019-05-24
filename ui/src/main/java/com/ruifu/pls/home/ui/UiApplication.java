@@ -50,13 +50,14 @@ public class UiApplication {
 
 
     @Configuration
-    @Order(SecurityProperties.BASIC_AUTH_ORDER)
+    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     protected static class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         @Override
         protected void configure(HttpSecurity http) throws Exception{
             http.httpBasic().and()
                     .authorizeRequests()
-                    .antMatchers("/index.html","login.html","/home.html","/favicon.ico", "/app/**", "/css/**", "/login","/js/**").permitAll()
+                    .antMatchers("/index.html","login.html","/home.html","/favicon.ico", "/app/**", "/css/**", "/login","/js/**")
+                    .permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .csrf()
