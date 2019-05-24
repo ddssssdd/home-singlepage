@@ -12,22 +12,87 @@
   <script src="/app/main.js"></script>
 </head>
 <body ng-app="App">
-<p1>hello, this is index home</p1>
-  <div class="container" ng-controller="MainCtrl">
-    <p1>{{message.content}}</p1>
-  </div>
-
+<div ng-controller="navigation as nav" class="container">
+  <ul class="nav nav-pills" role="tablist">
+    <li ng-class="{active:nav.tab('home')}"><a href="#/">home</a></li>
+    <li ng-class="{active:nav.tab('navigation')}"><a href="#/login">login</a></li>
+    <li ng-show="authenticated"><a href="" ng-click="nav.logout()">logout</a></li>
+  </ul>
+</div>
+<div ng-view class="container"></div>
 
   <script type="text/javascript">
       var app = angular.module("App");
-      app.controller('MainCtrl',function ($scope,$http)  {
-         $scope.message = {id:1,content:'hello, this is original'};
-         $http.post("/resource",{}).then(function(result,status,headers,config){
-             console.log(result);
-             $scope.message = result.data;
-         }).catch(function(result,status,headers,config){
-             console.log(result);
-         });
+      app.config(function($routeProvider,$httpProvider){
+          $routeProvider.when('/', {
+              templateUrl : 'home.html',
+              controller : 'home',
+              controllerAs: 'controller'
+          }).when('/login', {
+              templateUrl : 'login.html',
+              controller : 'navigation',
+              controllerAs: 'controller'
+          }).otherwise('/');
+
+          $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+      });
+      app.controller('navigation',function($rootScope, $http, $location, $route) {
+
+              var self = this;
+              self.tab = function(route) {
+                  return $route.current && route === $route.current.controller;
+              };
+
+              var authenticate = function(credentials, callback) {
+                  var headers = credentials ? {
+                      authorization : "Basic " + btoa(credentials.username + ":" + credentials.password)
+                  } : {};
+
+                  $http.get('user', {headers : headers}).then(function(response) {
+                      if (response.data.name) {
+                          $rootScope.authenticated = true;
+                      } else {
+                          $rootScope.authenticated = false;
+                      }
+                      callback && callback($rootScope.authenticated);
+                  }, function() {
+                      $rootScope.authenticated = false;
+                      callback && callback(false);
+                  });
+
+              }
+              authenticate();
+              self.credentials = {};
+
+              self.login = function() {
+                  authenticate(self.credentials, function(authenticated) {
+                      if (authenticated) {
+                          console.log("Login succeeded")
+                          $location.path("/");
+                          self.error = false;
+                          $rootScope.authenticated = true;
+                      } else {
+                          console.log("Login failed")
+                          $location.path("/login");
+                          self.error = true;
+                          $rootScope.authenticated = false;
+                      }
+                  })
+              };
+
+              self.logout = function() {
+                  $http.post('logout', {}).finally(function() {
+                      $rootScope.authenticated = false;
+                      $location.path("/");
+                  });
+              }
+
+          });
+      app.controller('home', function($http) {
+          var self = this;
+          $http.get('/resource/').then(function (response) {
+              self.greeting = response.data;
+          });
       });
   </script>
 </body>

@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +21,15 @@ import java.util.UUID;
 @Controller
 public class UiApplication {
 
-    @GetMapping("/user")
+    //https://spring.io/guides/tutorials/spring-security-and-angular-js/
+
+    @RequestMapping("/user")
     @ResponseBody
     public Principal user(Principal user){
         return user;
     }
 
-    @GetMapping("/resource")
+    @RequestMapping("/resource")
     @ResponseBody
     public Map<String,Object> home(){
         Map<String,Object> model = new HashMap<>();
@@ -53,7 +55,7 @@ public class UiApplication {
         protected void configure(HttpSecurity http) throws Exception{
             http.httpBasic().and()
                     .authorizeRequests()
-                    .antMatchers("/index.html","/favicon.ico", "/app/**", "/css/**", "/login","/js/**").permitAll()
+                    .antMatchers("/index.html","login.html","/home.html","/favicon.ico", "/app/**", "/css/**", "/login","/js/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .csrf()
