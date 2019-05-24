@@ -1,0 +1,16 @@
+server:
+  port: 9000
+security:
+  sessions: NEVER
+spring:
+  session:
+    store-type: redis
+  redis:
+    host: a.thoughts-go.top
+    password: rj20170103P@ss!2#4%6
+    port: 26379
+logging:
+  level:
+    org.springframework:
+      security: DEBUG
+      session: TRACE

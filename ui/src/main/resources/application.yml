@@ -1,3 +1,20 @@
 logging:
   level:
     org.springframework.security: DEBUG
+server:
+  port: 8081
+security:
+  user:
+    password: password
+spring:
+  redis:
+    port: 26379
+    host: a.thoughts-go.top
+    password: rj20170103P@ss!2#4%6
+  session:
+    store-type: redis
+zuul:
+  routes:
+    resource:
+      path: /resource/**
+      url: http://localhost:9000

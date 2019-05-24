@@ -90,9 +90,22 @@
           });
       app.controller('home', function($http) {
           var self = this;
-          $http.get('/resource/').then(function (response) {
+          /*
+          var url = "http://localhost:9000/resource/"
+          $http.get(url).then(function (response) {
               self.greeting = response.data;
+          });*/
+        $http.get('token').then(function(response) {
+          $http({
+            url : '/resource',//'http://localhost:9000',
+            method : 'GET',
+            headers : {
+              'X-Auth-Token' : response.data.token
+            }
+          }).then(function(response) {
+            self.greeting = response.data;
           });
+        })
       });
   </script>
 </body>
