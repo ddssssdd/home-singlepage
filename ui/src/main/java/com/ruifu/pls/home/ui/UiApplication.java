@@ -22,6 +22,7 @@ import java.util.UUID;
 public class UiApplication {
 
     //https://spring.io/guides/tutorials/spring-security-and-angular-js/
+    //https://github.com/spring-guides/tut-spring-security-and-angular-js/tree/angularjs/single
 
     @RequestMapping("/user")
     @ResponseBody
