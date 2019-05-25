@@ -1,0 +1,13 @@
+
+security:
+  oauth2:
+    client:
+      clientId: acme
+      clientSecret: acmesecret
+      authorizedGrantTypes: authorization_code,refresh_token,password
+      scope: openid
+  user:
+    password: password
+server:
+  port: 9999
+  context-path: /uaa
